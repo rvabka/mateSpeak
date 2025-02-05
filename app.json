@@ -11,7 +11,9 @@
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
+      "package": "com.jsm_mateSpeak",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
