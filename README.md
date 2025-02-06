@@ -1,50 +1,82 @@
-# Welcome to your Expo app 👋
+# 🗣️ MateSpeak 🌍
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+MateSpeak to aplikacja mobilna stworzona z myślą o nauce języka angielskiego, która umożliwia użytkownikom naukę słówek za pomocą fiszek (flashcards) oraz śledzenie swojego postępu w nauce. Aplikacja korzysta z **Lingua Robot API** do wyświetlania słówek i przykładów użycia, a także **MyMemory API** do tłumaczeń.
 
-## Get started
+Aplikacja oferuje różne poziomy trudności: `beginner`, `elementary`, `intermediate`, `advanced`, a dla każdego z poziomów dostępne są zestawy słówek. Użytkownicy mogą ćwiczyć swoje umiejętności w interaktywny sposób i obserwować, jak rozwija się ich znajomość języka.
 
-1. Install dependencies
+## Funkcje
 
-   ```bash
-   npm install
-   ```
+- **Fiszkowanie (flashcards)** – nauka słówek z tłumaczeniem oraz przykładem użycia.
+- **Poziomy trudności** – aplikacja oferuje cztery poziomy trudności słówek: `beginner`, `elementary`, `intermediate`, `advanced`.
+- **Śledzenie postępu** – możliwość monitorowania swojego rozwoju w nauce.
+- **Autoryzacja użytkowników** – integracja z Appwrite, umożliwiająca logowanie się i zarządzanie danymi użytkownika.
+- **Lingua Robot API** – wykorzystywane do wyświetlania słówek oraz przykładów użycia.
+- **MyMemory API** – tłumaczenia słówek w czasie rzeczywistym.
 
-2. Start the app
+## Instalacja
 
-   ```bash
-    npx expo start
-   ```
+Aby uruchomić MateSpeak na swoim urządzeniu, wystarczy kilka prostych kroków:
 
-In the output, you'll find options to open the app in a
+### 1. Zainstaluj Expo CLI
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Jeśli jeszcze nie masz zainstalowanego Expo CLI, zainstaluj go globalnie za pomocą npm:
 
 ```bash
-npm run reset-project
+npm install -g expo-cli
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Klonowanie repozytorium
+Skopiuj repozytorium na swoje lokalne urządzenie:
 
-## Learn more
+```bash
+git clone https://github.com/TwojaNazwaUzytkownika/MateSpeak.git
+cd MateSpeak
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+### 3. Instalacja zależności
+Zainstaluj wszystkie wymagane zależności przy użyciu npm:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm install
+```
 
-## Join the community
+### 4. Uruchomienie aplikacji
+Aby uruchomić aplikację na swoim urządzeniu lub emulatorze, użyj polecenia:
 
-Join our community of developers creating universal apps.
+```bash
+expo start
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Otworzy się strona w przeglądarce, z której możesz zeskanować kod QR, aby uruchomić aplikację na urządzeniu mobilnym za pomocą aplikacji Expo Go.
+
+## Wymagania
+
+Aby uruchomić projekt, musisz spełnić następujące wymagania:
+
+- Node.js w wersji 14 lub wyższej
+- Expo CLI
+- Konto w Appwrite do autoryzacji użytkowników
+- Dostęp do API:
+  - Lingua Robot API
+  - MyMemory API
+
+## Technologie
+
+W projekcie wykorzystano następujące technologie:
+
+- **React Native** – do budowy aplikacji mobilnej
+- **Expo** – framework do uruchamiania aplikacji
+- **Appwrite** – do autoryzacji użytkowników
+- **Lingua Robot API** – do wyświetlania słówek i przykładów użycia
+- **MyMemory API** – do tłumaczeń słówek
+
+## Kontrybucja
+
+Chciałbyś pomóc w rozwoju aplikacji? Świetnie! Oto jak możesz to zrobić:
+
+1. **Sforkuj to repozytorium** (Fork this repo)
+2. **Utwórz nową gałąź** (Create your feature branch):  
+```bash
+git checkout -b feature/AmazingFeature
+```
+### Powyższe `README.md` zawiera wszystkie istotne informacje, które mogą pomóc innym użytkownikom oraz programistom w zrozumieniu projektu, jego funkcji oraz procesu instalacji. Jeśli potrzebujesz dodatkowych zmian lub poprawek, daj znać!
