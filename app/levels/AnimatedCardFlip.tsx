@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -120,20 +120,21 @@ const AnimatedCardFlip = ({
           ]}
         >
           <TouchableWithoutFeedback onPress={flipCard}>
-            <View style={StyleSheet.absoluteFillObject}>
-              <LinearGradient
-                colors={['#22c55e', '#15803d']}
-                style={StyleSheet.absoluteFillObject}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-              />
+            <View style={styles.cardWrapper}>
+              {/* Przód karty */}
               <Animated.View
                 style={[styles.card, styles.front, frontAnimatedStyle]}
               >
+                <LinearGradient
+                  colors={['#22c55e', '#15803d']}
+                  style={StyleSheet.absoluteFillObject}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                />
                 <View style={styles.flagContainer}>
                   <Text style={styles.flagText}>🇬🇧</Text>
                 </View>
-                <Text className="font-PoppinsBold text-center text-5xl text-white">
+                <Text className="font-PoppinsBold text-center text-4xl text-white">
                   {englishWord}
                 </Text>
                 <Text className="font-PoppinsMedium text-center text-lg text-white">
@@ -143,13 +144,21 @@ const AnimatedCardFlip = ({
                   <Ionicons name="language-outline" size={24} color="white" />
                 </View>
               </Animated.View>
+
+              {/* Tył karty */}
               <Animated.View
                 style={[styles.card, styles.back, backAnimatedStyle]}
               >
+                <LinearGradient
+                  colors={['#22c55e', '#15803d']}
+                  style={StyleSheet.absoluteFillObject}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                />
                 <View style={styles.flagContainer}>
                   <Text style={styles.flagText}>🇵🇱</Text>
                 </View>
-                <Text className="font-PoppinsBold text-center text-5xl text-white">
+                <Text className="font-PoppinsBold text-center text-4xl text-white">
                   {translatedWord ? translatedWord : 'Loading...'}
                 </Text>
                 <View style={styles.iconContainer}>
@@ -176,6 +185,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  cardWrapper: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
   cardContainer: {
     width: width - 50,
     height: height / 2,
@@ -197,7 +211,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   back: {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    transform: [{ rotateY: '180deg' }]
   },
   flagContainer: {
     position: 'absolute',

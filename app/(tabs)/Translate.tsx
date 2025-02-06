@@ -81,7 +81,6 @@ const Translate = () => {
           placeholderTextColor="white"
           onChange={e => setEnglishWord(e.nativeEvent.text)}
           value={englishWord}
-          multiline
           className="text-white text-lg font-PoppinsMedium"
         />
       </View>
