@@ -14,39 +14,31 @@ import {
 } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import translateText from '../../api/libreTranslate';
-import debounce from 'lodash';
 
 interface AnimatedCardFlipProps {
   englishWord: string;
+  translatedWord?: string;
   example?: string;
   onSwipeLeft?: ({ nativeEvent }: { nativeEvent: any }) => void;
 }
 
 const AnimatedCardFlip = ({
   englishWord,
+  translatedWord,
   example,
   onSwipeLeft
 }: AnimatedCardFlipProps) => {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [translatedWord, setTranslatedWord] = useState<string>('');
 
   const flipAnimation = useRef(new Animated.Value(0)).current;
   const xAnimation = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    const fetchTranslation = async () => {
-      const translation = await translateText(englishWord, 'pl', 'en');
-      setTranslatedWord(translation);
-    };
-    fetchTranslation();
-  }, [englishWord]);
-
   const flipCard = () => {
-    Animated.timing(flipAnimation, {
+    Animated.spring(flipAnimation, {
       toValue: isFlipped ? 0 : 1,
-      duration: 300,
-      useNativeDriver: true
+      friction: 8,
+      tension: 10,
+      useNativeDriver: true,
     }).start(() => {
       setIsFlipped(!isFlipped);
     });
@@ -58,16 +50,17 @@ const AnimatedCardFlip = ({
     if (nativeEvent.state === State.END) {
       if (nativeEvent.translationX < -80) {
         setIsFlipped(false);
-        Animated.timing(flipAnimation, {
+        Animated.spring(flipAnimation, {
           toValue: 0,
-          duration: 150,
-          useNativeDriver: true
+          friction: 8,
+          tension: 10,
+          useNativeDriver: true,
         }).start();
         onSwipeLeft?.({ nativeEvent });
       }
       Animated.spring(xAnimation, {
         toValue: 0,
-        useNativeDriver: true
+        useNativeDriver: true,
       }).start();
     }
   };
@@ -79,6 +72,9 @@ const AnimatedCardFlip = ({
           inputRange: [0, 1],
           outputRange: ['0deg', '180deg']
         })
+      },
+      {
+        perspective: 1000
       }
     ]
   };
@@ -90,6 +86,9 @@ const AnimatedCardFlip = ({
           inputRange: [0, 1],
           outputRange: ['180deg', '360deg']
         })
+      },
+      {
+        perspective: 1000
       }
     ]
   };
@@ -181,7 +180,8 @@ const styles = StyleSheet.create({
     width: width - 50,
     height: height / 2,
     borderRadius: 20,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    backgroundColor: 'transparent'
   },
   card: {
     width: '100%',
@@ -189,7 +189,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    backfaceVisibility: 'hidden'
+    backfaceVisibility: 'hidden',
+    borderRadius: 20,
+    overflow: 'hidden'
   },
   front: {
     backgroundColor: 'transparent'
@@ -218,9 +220,9 @@ const styles = StyleSheet.create({
   },
   boxShadow: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
     elevation: 10
   }
 });

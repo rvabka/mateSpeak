@@ -16,9 +16,12 @@ const fetchWordDefinition = async word => {
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching word definition:', error);
+    console.error(
+      'Error fetching word definition:',
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
-
+// sk-2e2d17343d444413a52882a1c4ab6025
 export default fetchWordDefinition;

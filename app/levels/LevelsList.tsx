@@ -1,5 +1,5 @@
 import { View, Text, FlatList, TouchableOpacity, Image, RefreshControl } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { fetchProgress } from '@/lib/appwrite';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -48,8 +48,8 @@ const levels: Level[] = [
 const LevelsList = () => {
   const { user } = useGlobalContext();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState<Progress[]>([]);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   const getProgress = async () => {

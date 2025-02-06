@@ -8,7 +8,7 @@ import {
   BackHandler
 } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
-import { useLocalSearchParams, useFocusEffect, router } from 'expo-router';
+import { useLocalSearchParams, useFocusEffect } from 'expo-router';
 import { fetchWords, updateProgress } from '@/lib/appwrite';
 import AnimatedCardFlip from './AnimatedCardFlip';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -20,6 +20,10 @@ import {
 } from 'react-native-gesture-handler';
 import BackButton from '@/components/BackButton';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { addOwnUserWords } from '@/lib/appwrite';
+import translateText from '../../api/libreTranslate';
+import CustomModalProps from '@/components/Modals/CustomModal';
+import LeaveModal from '@/components/Modals/LeaveModal';
 
 interface wordsData {
   levelID: string;
@@ -32,16 +36,18 @@ const LevelDetail = () => {
   const { user } = useGlobalContext();
   const { levelID } = useLocalSearchParams();
   const [loading, setLoading] = useState(true);
+
   const [words, setWords] = useState<wordsData[]>([]);
   const [currentWord, setCurrentWord] = useState(0);
   const [learnedWords, setLearnedWords] = useState(0);
   const [learnedWordsSet, setLearnedWordsSet] = useState<Set<string>>(
     new Set()
   );
-  const [showPopup, setShowPopup] = useState({
-    finishedLevel: false,
-    goBack: false
-  });
+  const [translatedWord, setTranslatedWord] = useState<string>('');
+
+  const [finishedModal, setFinishedModal] = useState(false);
+  const [reviewModal, setReviewModal] = useState(false);
+  const [goBack, setGoBack] = useState(false);
 
   useEffect(() => {
     const getWords = async () => {
@@ -62,12 +68,23 @@ const LevelDetail = () => {
     getWords();
   }, [levelID]);
 
+  useEffect(() => {
+    if (words.length > 0 && words[currentWord]) {
+      const fetchTranslation = async () => {
+        const translation = await translateText(
+          words[currentWord].word,
+          'pl',
+          'en'
+        );
+        setTranslatedWord(translation);
+      };
+      fetchTranslation();
+    }
+  }, [words, currentWord]);
+
   const onBackPress = () => {
     if (learnedWords < words.length) {
-      setShowPopup(goBack => ({
-        ...goBack,
-        goBack: true
-      }));
+      setGoBack(true);
       return true;
     }
     return false;
@@ -90,10 +107,7 @@ const LevelDetail = () => {
         setLearnedWords(newLearnedWords);
         if (newLearnedWords === words.length) {
           updateProgress(user.$id, levelID);
-          setShowPopup(finishedLevel => ({
-            ...finishedLevel,
-            finishedLevel: true
-          }));
+          setFinishedModal(true);
         }
         return newSet;
       });
@@ -132,7 +146,7 @@ const LevelDetail = () => {
             {words[currentWord] ? (
               <AnimatedCardFlip
                 englishWord={words[currentWord].word}
-                pronunciation={words[currentWord].pronunciation}
+                translatedWord={translatedWord}
                 example={words[currentWord].example}
                 onSwipeLeft={onSwipe}
               />
@@ -152,7 +166,13 @@ const LevelDetail = () => {
               Knew Word
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-col justify-center items-center bg-[#F98A5C] p-2 rounded-xl">
+          <TouchableOpacity
+            onPress={() => {
+              addOwnUserWords(user.$id, translatedWord, words[currentWord].word);
+              setReviewModal(true);
+            }}
+            className="flex-col justify-center items-center bg-[#F98A5C] p-2 rounded-xl"
+          >
             <Icon name="hearto" size={24} color={'#fff'} />
             <Text className="text-white text-lg font-PoppinsMedium">
               Mark Review
@@ -166,71 +186,21 @@ const LevelDetail = () => {
           </TouchableOpacity>
         </View>
 
-        <Modal
-          visible={showPopup.finishedLevel}
-          transparent
-          animationType="slide"
-        >
-          <View className="flex-1 justify-center items-center bg-black/50">
-            <View className="bg-white p-6 rounded-xl items-center">
-              <Text className="text-lg font-PoppinsBold">Great Job!</Text>
-              <Text className="mt-2 text-center font-PoppinsMedium text-base">
-                You have learned all words in this level.
-              </Text>
-              <TouchableOpacity
-                className="mt-4 bg-green-500 p-2 rounded-xl"
-                onPress={() => {
-                  setShowPopup(finishedLevel => ({
-                    ...finishedLevel,
-                    finishedLevel: true
-                  }));
-                  router.back();
-                }}
-              >
-                <Text className="text-white text-lg font-PoppinsBold">
-                  Go Back
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal visible={showPopup.goBack} transparent animationType="slide">
-          <View className="flex-1 justify-center items-center bg-black/50">
-            <View className="bg-white p-6 rounded-xl items-center">
-              <Text className="text-lg font-PoppinsBold">Warning!</Text>
-              <Text className="mt-2 text-center font-PoppinsMedium text-base">
-                You haven't learned all words in this level. {'\n'}
-                <Text className="text-red-500 font-PoppinsBold">
-                  If you leave you will lost your progress!
-                </Text>
-              </Text>
-              <View className="flex-row gap-4">
-                <TouchableOpacity
-                  className="mt-4 bg-green-500 p-2 rounded-xl"
-                  onPress={() => {
-                    setShowPopup(goBack => ({ ...goBack, goBack: false }));
-                  }}
-                >
-                  <Text className="text-white text-lg font-PoppinsBold">
-                    Stay
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  className="mt-4 bg-green-500 p-2 rounded-xl"
-                  onPress={() => {
-                    setShowPopup(goBack => ({ ...goBack, goBack: false }));
-                    router.back();
-                  }}
-                >
-                  <Text className="text-white text-lg font-PoppinsBold">
-                    Leave
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
+        <CustomModalProps
+          modalVisible={finishedModal}
+          setModalVisible={setFinishedModal}
+          title={'Great Job!'}
+          description={'You have learned all words in this level.'}
+        />
+        <CustomModalProps
+          modalVisible={reviewModal}
+          setModalVisible={setReviewModal}
+          title={'Great Job!'}
+          description={'Word successfully added to repetition.'}
+          extraStyles={'text-[#F55A71]'}
+          isRouter={false}
+        />
+        <LeaveModal goBack={goBack} setGoBack={setGoBack} />
       </SafeAreaView>
     </GestureHandlerRootView>
   );

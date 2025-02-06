@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Modal } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobalContext } from '../../context/GlobalProvider';
@@ -6,6 +6,7 @@ import { useRootNavigationState, useRouter } from 'expo-router';
 import translateText from '../../api/libreTranslate';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { debounce } from 'lodash';
+import { addOwnUserWords } from '@/lib/appwrite';
 
 const Translate = () => {
   const rootNavigationState = useRootNavigationState();
@@ -14,6 +15,8 @@ const Translate = () => {
 
   const [englishWord, setEnglishWord] = useState<string>('');
   const [translatedWord, setTranslatedWord] = useState<string>('');
+
+  const [showPupup, setShowPopup] = useState(false);
 
   const fetchTranslation = useCallback(
     debounce(async (text: string) => {
@@ -48,6 +51,17 @@ const Translate = () => {
     }
   }, [user, rootNavigationState?.key, router]);
 
+  const addToDatabase = async (
+    accountId: string,
+    englishWord: string,
+    translatedWord: string
+  ) => {
+    if (englishWord != '' && translatedWord != '') {
+      await addOwnUserWords(accountId, englishWord, translatedWord);
+      setShowPopup(true);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 p-8 px-4 bg-primaryColor">
       <View>
@@ -66,6 +80,7 @@ const Translate = () => {
           placeholder="Enter text..."
           placeholderTextColor="white"
           onChange={e => setEnglishWord(e.nativeEvent.text)}
+          value={englishWord}
           multiline
           className="text-white text-lg font-PoppinsMedium"
         />
@@ -84,15 +99,32 @@ const Translate = () => {
       <TouchableOpacity
         className="flex-row justify-center items-center p-4 rounded-xl mt-3"
         activeOpacity={0.7}
-        onPress={() => {
-          console.log('Dodano do ulubionych:', englishWord, translatedWord);
-        }}
+        onPress={() => addToDatabase(user.$id, englishWord, translatedWord)}
       >
         <Icon name="heart" size={30} color="#22c55e" />
         <Text className="text-white text-xl font-PoppinsMedium ml-2">
           Add to Repeat
         </Text>
       </TouchableOpacity>
+
+      <Modal visible={showPupup} transparent animationType="slide">
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-6 rounded-xl items-center">
+            <Text className="text-lg font-PoppinsBold">Great Job!</Text>
+            <Text className="mt-2 text-center font-PoppinsMedium text-base">
+              New word successfully added to repetition.
+            </Text>
+            <TouchableOpacity
+              className="mt-4 bg-green-500 p-2 rounded-xl"
+              onPress={() => {
+                setShowPopup(false), setEnglishWord('');
+              }}
+            >
+              <Text className="text-white text-lg font-PoppinsBold">Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
