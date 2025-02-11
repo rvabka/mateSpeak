@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getCurrentUser, logoutUser } from '../lib/appwrite';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 const GlobalContext = createContext();
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigation = useNavigation();
 
   useEffect(() => {
     const initUser = async () => {
@@ -33,7 +33,7 @@ const GlobalProvider = ({ children }) => {
     await logoutUser();
     setUser(null);
     setIsLoggedIn(false);
-    navigation.navigate('/');
+    router.replace('/');
   };
 
   return (

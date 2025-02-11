@@ -168,7 +168,11 @@ const LevelDetail = () => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              addOwnUserWords(user.$id, translatedWord, words[currentWord].word);
+              addOwnUserWords(
+                user.$id,
+                translatedWord,
+                words[currentWord].word
+              );
               setReviewModal(true);
             }}
             className="flex-col justify-center items-center bg-[#F98A5C] p-2 rounded-xl"
@@ -176,12 +180,6 @@ const LevelDetail = () => {
             <Icon name="hearto" size={24} color={'#fff'} />
             <Text className="text-white text-lg font-PoppinsMedium">
               Mark Review
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity className="flex-col justify-center items-center bg-[#F55A71] p-2 rounded-xl">
-            <Icon name="meh" size={24} color={'#fff'} />
-            <Text className="text-white text-lg font-PoppinsMedium">
-              See Morning
             </Text>
           </TouchableOpacity>
         </View>

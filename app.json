@@ -11,7 +11,6 @@
     "ios": {
       "supportsTablet": true
     },
-
     "android": {
       "package": "com.jsm_mateSpeak",
       "adaptiveIcon": {
@@ -34,10 +33,26 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "../assets/images/mateSpeakLogo.png",
+          "color": "#ffffff",
+          "enableBackgroundRemoteNotifications": true
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4ac2339e-0be7-4888-94bf-0b9820214cd7"
+      }
     }
   }
 }

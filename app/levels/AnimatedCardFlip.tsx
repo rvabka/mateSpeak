@@ -38,7 +38,7 @@ const AnimatedCardFlip = ({
       toValue: isFlipped ? 0 : 1,
       friction: 8,
       tension: 10,
-      useNativeDriver: true,
+      useNativeDriver: true
     }).start(() => {
       setIsFlipped(!isFlipped);
     });
@@ -54,13 +54,13 @@ const AnimatedCardFlip = ({
           toValue: 0,
           friction: 8,
           tension: 10,
-          useNativeDriver: true,
+          useNativeDriver: true
         }).start();
         onSwipeLeft?.({ nativeEvent });
       }
       Animated.spring(xAnimation, {
         toValue: 0,
-        useNativeDriver: true,
+        useNativeDriver: true
       }).start();
     }
   };
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   cardWrapper: {
     width: '100%',
     height: '100%',
-    position: 'relative',
+    position: 'relative'
   },
   cardContainer: {
     width: width - 50,
@@ -218,7 +218,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 20,
     left: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 15,
     padding: 10
   },

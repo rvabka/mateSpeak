@@ -5,8 +5,7 @@ import {
   Text,
   View,
   Image,
-  ImageBackground,
-  TouchableOpacity
+  ImageBackground
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import mateSpeakLogo from '../assets/images/mateSpeakLogo.png';
@@ -15,9 +14,28 @@ import CustomButton from '@/components/CustomButton';
 import { router } from 'expo-router';
 import '../global.css';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import scheduleDailyNotification from './notifications';
+import * as Notifications from 'expo-notifications';
 
 export default function Index() {
   const { user } = useGlobalContext();
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true
+    })
+  });
+
+  useEffect(() => {
+    scheduleDailyNotification(21, 25);
+
+    setTimeout(async () => {
+      const notifs = await Notifications.getAllScheduledNotificationsAsync();
+      console.log('📢 Powiadomienia w systemie:', notifs);
+    }, 5000);
+  }, []);
 
   const handleChangeView = async () => {
     try {
